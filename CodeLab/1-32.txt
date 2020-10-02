@@ -1,0 +1,989 @@
+1. two sum
+
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j < nums.length; j++) {
+                if (nums[j] == target - nums[i]) {
+                    return new int[] { i, j };
+                }
+            }
+        }
+        throw new IllegalArgumentException("No solution.");
+
+    }
+}
+
+
+
+2.add two numbers
+
+class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+         return dfs(l1, l2, 0);
+    }
+
+    ListNode dfs(ListNode l, ListNode r, int i) {
+        if (l == null && r == null && i == 0) return null;
+        int sum = (l != null ? l.val : 0) + (r != null ? r.val : 0) + i;
+        var node = new ListNode(sum % 10);
+        node.next = dfs(l != null ? l.next : null, r != null ? r.next : null, sum / 10);
+        return node;
+    }
+
+    
+}
+
+
+
+3. longest substring without repeating characters
+
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+ if (s == null || s.equals("")) {
+            return 0;
+        }
+        int start = 0;
+        int index = 0;
+        int size = 0;
+        int maxSize = 0;
+        int tempSize = 0;
+        for (int i = 0; i < s.length(); i++) {
+            index = find(start, i, s, s.charAt(i));
+            if (index != -1) {
+                size=i - index;
+                start=index+1;
+                maxSize = Math.max(maxSize, size);
+            }else{
+                size++;
+            }
+        }
+        if(start==0){
+            return s.length();
+        }
+        return Math.max(maxSize, size);
+
+    }
+
+    private int find(int start, int end, String sub, char c) {
+        for (int i = start; i < end; i++) {
+            if (sub.charAt(i) == c) {
+                return i;
+            }
+        }
+        return -1;
+    }
+}
+
+
+
+4.Median of two sorted arrays
+
+
+class Solution {
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int a=nums1.length;
+        int b=nums2.length;
+        int[] nums3=new int[a+b];
+        for(int i=0;i<a;i++)
+            nums3[i]=nums1[i];
+        int d=a;
+        for(int i=0;i<b;i++){
+            nums3[d]=nums2[i];
+            d++;
+        }
+        Arrays.sort(nums3);
+        double c=0;
+        if((a+b)%2==0){
+            double f=nums3[(a+b)/2-1]+nums3[(a+b)/2];
+            c=f/2;
+        }
+        else {
+            c=nums3[(a+b)/2];
+        }
+        return c;
+    }
+}
+
+
+
+5.longest palindromic substring
+
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        int n = s.size();
+        string ret;
+        vector<vector<bool>> dp(n, vector<bool>(n));
+
+        for(int len = 1; len <= n; ++len){
+            for(int i = 0; i <= n - len; ++i){
+                int j = i + len - 1;
+                if(len == 1) dp[i][j] = true;
+                else if(len == 2) dp[i][j] = (s[i] == s[j]);
+                else dp[i][j] = (s[i] == s[j] && dp[i+1][j-1]);
+                if((j - i + 1 > ret.size() && dp[i][j])) ret = s.substr(i, len);
+            }
+        }
+        return ret;
+    }
+}
+
+
+
+6.zigzag conversion
+
+class Solution {
+    public String convert(String s, int numRows) {
+        if(numRows<2) return s;
+        List<StringBuilder> list = new ArrayList<>();
+        for (int i =0;i<numRows;i++) list.add(new StringBuilder());
+        int i=0,flag=-1;
+        for(char c: s.toCharArray()) {
+            list.get(i).append(c);
+            if(i==0||i==numRows-1) flag = -flag;
+            i+=flag;
+        }
+        StringBuilder res = new StringBuilder();
+        for(StringBuilder str:list) res.append(str);
+        return res.toString();
+    }
+}
+
+
+7.reverse integer
+
+class Solution {
+    public int reverse(int x) {
+        int result = 0 ;
+        if(x>0){
+            for(int i = x ; i > 0 ; i = i/10){
+                if(result>Integer.MAX_VALUE/10){
+                    return 0;
+                }else if(result*10>Integer.MAX_VALUE-i%10){
+                    return 0;
+                }else {
+                    result = result*10 + i%10;
+                }
+            }
+        }
+        if(x < 0){
+            for(int i = -x ; i > 0 ; i = i/10){
+                if(-result<Integer.MIN_VALUE/10){
+                    return 0;
+                }else if(-result*10<Integer.MIN_VALUE+i%10){
+                    return 0;
+                }else {
+                    result = result*10 + i%10;
+                }
+            }
+            result = -result;
+        }
+
+        return result;
+    }
+}
+
+
+
+8.string to integer
+
+class Solution {
+    public int myAtoi(String str) {
+         if (str.length()==0||str==" "){
+            return 0;
+        }
+
+        char[] chars = str.trim().toCharArray();
+        if (chars.length<=0){
+            return 0;
+        }
+        char i1;
+        int count=0;
+        boolean flag=false;
+        boolean flag2=false;
+        int m=0;
+        int m1=0;
+        double a=0;
+        if (!((chars[0] >=48 && chars[0]<=57) || chars[0]==45||chars[0]==43 )){
+            return 0;
+        }
+        for (int i = 0; i < chars.length; i++) {
+            if (i>=1 && (chars[i]==45||chars[i]==43)){
+                break;
+            }
+            if (chars[i] >=48 && chars[i]<=57 ||chars[i]==45||chars[i]==43){
+                m++;
+            }else {
+                break;
+            }
+            if (chars[i]==46){
+                break;
+            }
+            if (chars[i] >=49 && chars[i]<=57){
+                m1++;
+            }
+
+        }
+
+        for (int i = 0; i < m; i++) {
+            if (chars[i] >=48 && chars[i]<=57 ||chars[i]==45||chars[i]==43){
+                if (chars[i]==45){
+                    i1=chars[i];
+                    if (i1==45){
+                       flag=true;
+                    }
+                    continue;
+                }else if (chars[i]==43){
+                    i1=chars[i];
+                    if (i1==43){
+                        flag2=true;
+                    }
+                    continue;
+                }
+                char aChar = chars[i];
+                int i2 = aChar - '0';
+
+                if (i==m-1){
+                    a+=i2;
+                    continue;
+                }
+                a=i2*10+a*10;
+
+            }
+        }
+        if (flag){
+
+            a*=-1;
+        }
+        if (flag && flag2){
+            return 0;
+        }
+        if (m1>=10 && a<-2147483648){
+            return -2147483648;
+        }else if(m1>=10 && a>2147483647){
+            return 2147483647;
+        }else {
+            count= (int) a;
+        }
+
+        return count;
+    }
+}
+
+
+
+9.palindrome number
+
+class Solution {
+    public boolean isPalindrome(int x) {
+        int initx=x;
+        int rev=0;
+
+        if(initx<0){
+         return false;
+        }
+
+       if(initx==0){
+         return true;
+        }
+
+        while(x!=0){
+            int b=x%10;
+            x/=10;
+            if(rev>Integer.MAX_VALUE){
+                return false;
+            }
+            if(rev<Integer.MIN_VALUE){
+                return false;
+            }
+            rev=rev*10+b;
+        }
+
+        if(initx==rev){
+            return true;
+        }else{
+            return false;
+        }
+    }
+}
+
+
+
+10. regular expression matching
+
+sorry, I cannot solve it.
+
+
+
+11.container with most water
+
+class Solution {
+    public int maxArea(int[] height) {
+        int s = 0;
+        int max = 0;
+        for(int i = 0;i<height.length;i++){
+            for(int j =i+1;j<height.length;j++){
+                s = (j-i)*Math.min(height[i],height[j]);
+                if(max<s){
+                    max = s;
+                }
+            }
+        }
+        return max;
+    }
+}
+
+
+
+12.integer to roman
+
+class Solution {
+   public String intToRoman(int num) {
+        String gewei[] = new String[]{"I","II","III","IV","V","VI","VII","VIII","IX"};
+        String[] shiwei = new String[]{"X","XX","XXX","XL","L","LX","LXX","LXXX","XC"};
+        String[] baiwei = new String[]{"C","CC","CCC","CD","D","DC","DCC","DCCC","CM"};
+        String[] qianwei = new String[]{"M","MM","MMM"};
+        int chushu = 1;
+        StringBuffer stringBuffer = new StringBuffer();
+        while (num / chushu > 0){
+            if(chushu == 1 && num % (chushu * 10) > 0){
+                stringBuffer.insert(0,gewei[num % (chushu * 10) - 1]);
+                num -= num % (chushu * 10);
+            }else if(chushu == 10 && num % (chushu * 10) > 0){
+                stringBuffer.insert(0,shiwei[num % (chushu * 10) / chushu - 1]);
+                num -= num % (chushu * 10);
+            }else if(chushu == 100 && num % (chushu * 10) > 0){
+                stringBuffer.insert(0,baiwei[num % (chushu * 10) / chushu - 1]);
+                num -= num % (chushu * 10);
+            }else if(chushu == 1000 && num % (chushu * 10) > 0){
+                stringBuffer.insert(0,qianwei[num % (chushu * 10) / chushu - 1]);
+                num -= num % (chushu * 10);
+            }
+            chushu *= 10;
+        }
+        return stringBuffer.toString();
+    }
+}
+
+
+
+13.roman t integer
+
+public int romanToInt2(String s) {
+		int res = 0;
+		Map<Character, Integer> map = new HashMap<>();
+		map.put('I', 1);
+		map.put('V', 5);
+		map.put('X', 10);
+		map.put('L', 50);
+		map.put('C', 100);
+		map.put('D', 500);
+		map.put('M', 1000);
+		for(int i = 0, offset = 0; i < s.length(); i += offset+1, offset = 0) {
+			while(i+offset+1 < s.length() && map.get(s.charAt(i+offset)) < map.get(s.charAt(i+offset+1))) {
+				offset++;
+			}
+			res += map.get(s.charAt(i+offset));
+			for(int j = i+offset-1; j >= i; j--) {
+				res -= map.get(s.charAt(j));
+			}
+		}
+		return res;
+	}
+
+
+
+14.longest common prefix
+
+class Solution {
+    public String longestCommonPrefix(String[] strs) {
+            int num=strs.length;
+            if(num==0) return "";
+            String tmp=strs[0];
+            int len=tmp.length();
+            for(int i=1;i<num;i++)
+            {
+                int j=0;
+                for(;j<tmp.length()&j<strs[i].length();j++)
+                {
+                    if(tmp.charAt(j)!=strs[i].charAt(j))
+                    {
+                        break;
+                    }
+                }
+                tmp=tmp.substring(0,j);
+                if(tmp.equals(""))
+                return tmp;
+            }
+
+        return tmp;
+    }
+}
+
+
+
+15.3sum
+
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+
+        Arrays.sort(nums);
+
+        int l = nums.length;
+
+        if(l <= 2 || nums == null){
+            return res;
+        }
+
+        for(int i = 0 ; i < l ; i++){
+            if(nums[i] > 0){break;}
+            if(i > 0 && nums[i] == nums[i - 1]){continue;}
+            int sum = 0 - nums[i];
+            int head = i + 1;
+            int tail = l-1;
+            while(tail > head){
+                if(nums[tail] + nums[head] == sum){
+                    res.add(Arrays.asList(nums[tail],nums[head],nums[i]));
+                    while(tail > head && nums[head] == nums[head + 1]) head++;
+                    while(tail > head && nums[tail] == nums[tail - 1]) tail--;
+                    head++;
+                    tail--;
+                }else if(nums[tail] + nums[head] > sum){
+                    tail--;
+                }else{
+                    head++;
+                }
+            }
+        }
+        return res;
+    }
+}
+
+
+
+16.3 sum closest
+
+class Solution {
+    public int threeSumClosest(int[] nums, int target) {
+        if(nums == null || nums.length == 0){
+            return 0;
+        }
+
+        Arrays.sort(nums);
+
+        int diff = Integer.MAX_VALUE;
+        int res = 0;
+
+        for (int i = 0; i < nums.length; i++) {
+            int left = 0, right = i - 1;
+            while(left < right){
+                int sum = nums[left] + nums[right] + nums[i];
+                if(sum < target){
+                    if(target - sum < diff){
+                        diff = target - sum;
+                        res = sum;
+                    }
+                    left++;
+                }else{
+                    if(sum - target < diff){
+                        diff = sum - target;
+                        res = sum;
+                    }
+                    right--;
+                }
+            }
+        }
+        return res;
+    }
+}
+
+
+
+17.letter combinations of a phone number
+
+class Solution {
+    private static final char[][] tabs = {
+            {}, // 0
+            {}, // 1
+            {'a', 'b', 'c'},//2
+            {'d', 'e', 'f'},//3
+            {'g', 'h', 'i'},//4
+            {'j', 'k', 'l'},//5
+            {'m', 'n', 'o'},//6
+            {'p', 'q', 'r', 's'},//7
+            {'t', 'u', 'v'},//8
+            {'w', 'x', 'y', 'z'}//9
+    };
+
+    public List<String> letterCombinations(String digits) {
+        List<String> ans = new ArrayList<>();
+        if (null == digits || (digits = digits.trim()).length() <= 0) {
+            return ans;
+        }
+        char[] digitsArray = digits.toCharArray();
+        dfs(ans, new StringBuilder(32), 0, digitsArray);
+        return ans;
+    }
+
+    private static void dfs(List<String> ans, StringBuilder buf, int start, char[] digits) {
+        if (start >= digits.length) {
+            ans.add(buf.toString());
+            return;
+        }
+        char[] tab = tabs[digits[start] - '0'];
+        for (char ch : tab) {
+            buf.append(ch);
+            dfs(ans, buf, start + 1, digits);
+            buf.deleteCharAt(buf.length() - 1);
+        }
+    }
+}
+
+
+
+18.4sum
+
+class Solution {
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        int len = nums.length;
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        if(nums == null || len < 4){
+            return res;
+        }
+        Arrays.sort(nums);
+        for(int i = 0;i < len - 2;i++){
+            if(i > 0 && nums[i] == nums[i-1]){
+                continue;
+            }
+            for(int j = i + 1;j < len - 1;j++){
+                int sum = target - nums[i] - nums[j];
+                if(j > (i + 1) && nums[j] == nums[j-1]){
+                    continue;
+                }
+                int left = j + 1;
+                int right = len - 1;
+                while(right > left){
+                    if(nums[left] + nums[right] == sum){
+                        List<Integer> list = new ArrayList<Integer>();
+                        list = Arrays.asList(nums[i],nums[j],nums[left],nums[right]);
+                        res.add(list);
+                        left++; right--; // 首先无论如何先要进行加减操作
+                        while (left < right && nums[left] == nums[left - 1]) left++;
+                        while (left < right && nums[right] == nums[right + 1]) right--;
+                    }else if(nums[left] + nums[right] > sum){
+                        right--;
+                    }else{
+                        left++;
+                    }
+                } 
+            }
+        }
+        return res;
+    }
+}
+
+
+
+19. remove nth node from end of list
+
+we already finish it in class
+
+
+
+20.valid parentheses
+
+class Solution {
+    public boolean isValid(String s) {
+        if (s == null ) return false;
+        Stack<Character> stack = new Stack<>();
+        int len = s.length();
+        for ( int i = 0 ; i < len ; i++ ) {
+             char cur = s.charAt(i); 
+            if (cur == '(' ||cur == '{' ||cur == '[' ) {
+                stack.push(cur);
+            }else{
+                if(stack.isEmpty())return false;
+                 char pop = stack.pop();
+                if(pop == '(' && cur ==')' || pop == '{' && cur =='}'||pop == '[' && cur ==']'){
+                  continue;
+                }else{
+                    return false;
+                }
+            }
+        }
+        return stack.isEmpty()?true:false;
+    }
+}
+
+
+
+21.merge two sorted lists
+
+class Solution {
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        if (l1 == null) return l2;
+		if (l2 == null) return l1;
+		
+		ListNode retNode = new ListNode(0);
+		ListNode node = retNode;
+		 
+		while (l1 != null && l2 != null) {
+			if (l1.val <= l2.val) {
+				node.next = l1;
+				l1 = l1.next;
+			}else {
+				node.next = l2;
+				l2 = l2.next;
+			}	
+			node = node.next;
+		}
+		node.next = l1 == null ? l2 : l1;
+		
+		return retNode.next;
+    }
+}
+
+
+
+22.generate paretheses
+
+class Solution {
+    public List<String> generateParenthesis(int n) {
+        return IntStream.rangeClosed(IntStream.range(0, n).reduce(0, (acc, i) -> acc |= 1 << (2 * i + 1)), n == 0 ? -1 : (1 << 2 * n) - (1 << n))
+                .filter(num -> IntStream.range(0, 2 * n).reduce(0, (last, i) -> last < 0 ? last : last + ((num >> i & 1) == 0 ? 1 : -1)) == 0)
+                .mapToObj(num -> Integer.toBinaryString(num).replace('1', '(').replace('0', ')'))
+                .collect(Collectors.toList());
+    }
+}
+
+
+
+23.merge k sorted lists
+
+class Solution {
+
+    public ListNode mergeKLists(ListNode[] lists) {
+
+        if (lists.length == 0) {
+            return null;
+        }
+
+        if (lists.length == 1) {
+            return lists[0];
+        }
+
+        if (lists.length == 2) {
+            return mergeTwoLists(lists[0], lists[1]);
+        }
+
+        if (lists.length > 2) {
+            int mid = lists.length / 2;
+            ListNode[] left  = Arrays.copyOfRange(lists, 0, mid);
+            ListNode[] right = Arrays.copyOfRange(lists, mid, lists.length);
+            
+            ListNode leftNode  = mergeKLists(left);
+            ListNode rightNode = mergeKLists(right);
+            
+            return mergeTwoLists(leftNode, rightNode);
+        }
+        
+        return null;
+    }
+
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+
+        if (l1 == null)
+            return l2;
+
+        if (l2 == null)
+            return l1;
+
+        if (l1.val < l2.val) {
+
+            l1.next = mergeTwoLists(l1.next, l2);
+            return l1;
+        } else {
+
+            l2.next = mergeTwoLists(l2.next, l1);
+            return l2;
+        }
+    }
+}
+
+
+
+
+24.swap nodes in pairs
+
+class Solution {
+    public ListNode swapPairs(ListNode head) {
+        if (head == null || head.next ==null){
+            return head;
+        }
+        ListNode p1 = head;
+        ListNode p2 = head.next;
+        p1.next = swapPairs(p2.next);
+        p2.next = p1;
+        return p2;
+    }
+}
+
+
+
+
+25.reverse nodes in k-group
+
+class Solution {
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if (head == null) {
+            return head;
+        }
+        ListNode tail = head;
+        for (int i = 0; i < k; i++) {
+            if (tail == null) {
+                return head;
+            }
+            tail = tail.next;
+        }
+        ListNode newHead = reverseList(head, tail);
+        head.next = reverseKGroup(tail, k);
+        return newHead;
+    }
+
+    public ListNode reverseList(ListNode head, ListNode tail) {
+        if (head == null) {
+            return head;
+        }
+        ListNode prev = null;
+        ListNode curr = head;
+        while (curr != tail) {
+            ListNode node = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = node;
+        }
+        return prev;
+    }
+}
+
+
+
+26.remove duplicates from sorted array
+
+class Solution {
+    public int removeDuplicates(int[] nums) {
+        if(nums == null || nums.length == 0) {
+            return 0;
+        }
+        int index = 0;
+        int distinctLength = 1;
+        while(index < nums.length && nums[index] <= nums[nums.length - 1]) {
+            if(nums[index] > nums[distinctLength - 1]) {
+                nums[distinctLength] = nums[index];
+                distinctLength++;
+            }
+            index++;
+        }
+        return distinctLength;
+    }
+}
+
+
+
+27.remove element
+
+class Solution {
+    public int removeElement(int[] nums, int val) {
+        int i=0;
+        for(int j=0;j<nums.length;j++){
+            if(nums[j]!=val){
+                nums[i] = nums[j];
+                i++;
+            }
+        }
+        return i;
+    }
+}
+
+
+
+28. implement strStr()
+
+class Solution {
+    public static boolean judge(String str,String st){
+        if(str.contains(st)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    public static int strStr(String haystack, String needle) {
+        if(judge(haystack,needle)){
+            return haystack.indexOf(needle);
+        }else if (needle.equals(" ")){
+            return 0;
+        }else{
+            return -1;
+        }
+    }
+}
+
+
+
+29.divide two integers
+
+class Solution {
+
+    public int divide(int dividend, int divisor) {
+        if(divisor == 1) return dividend;
+        if(divisor == -1 && dividend == Integer.MIN_VALUE)
+            return Integer.MAX_VALUE;
+
+        long a = dividend;
+        long b = divisor;
+
+        long ans;
+        if(a >0 && b > 0)
+            ans = div(a,b);
+        else if(a <0 && b < 0)
+            ans = div(-a, -b);
+        else    
+            ans = -div(Math.abs(a), Math.abs(b));
+        
+        return (int) ans;
+
+    }
+
+    public long div(long a, long b) {
+        
+        if(a < b) return 0;
+
+        int i = 0;
+        while( a >= (b<<i) ){
+            i++;
+        }
+        i--;
+
+        return (1<<i) + div(a - (b<<i) , b);
+    }
+
+}
+
+
+
+30.substring with concatenation of all words
+
+class Solution {
+    public List<Integer> findSubstring(String s, String[] words) {
+        List<Integer> result = new ArrayList<>();
+        if (words.length == 0) { return result; }
+        Map<String, Integer> wordMap= new HashMap<>(words.length);
+        int wordLength = words[0].length();
+        int windowLength = words.length * wordLength;
+        for (String word : words) {
+            if (wordMap.containsKey(word)) { wordMap.put(word, wordMap.get(word) + 1); }
+            else { wordMap.put(word, 1); }
+        }
+        Map<String, Integer> window= new HashMap<>(words.length);
+        for(int i = 0; i < s.length(); i ++) {
+            if (s.substring(i).length() < windowLength) { return result; }
+            for(int j = i; j <= windowLength - wordLength + i; j += wordLength) {
+                String hasWord = s.substring(j, j + wordLength);
+                if (window.containsKey(hasWord)) { window.put(hasWord, window.get(hasWord) + 1); }
+                else { window.put(hasWord, 1); }
+            }
+            if(window.equals(wordMap)) { result.add(i); }
+            window.clear();
+        }
+        return result;
+    }
+}
+
+
+
+31.next permutation
+
+class Solution {
+    public void nextPermutation(int[] nums) {
+    	if(nums.length<=1)return;
+		int max = nums[nums.length - 1];
+		for (int i = nums.length - 1; i >= 0; i--) {
+			int a = nums[i];
+			if (a < max) {
+				int index=i;
+				for (int x = i+1; x < nums.length; x++) {
+					for (int y = x + 1; y < nums.length; y++) {
+						if (nums[x] > nums[y]) {
+							int temp = nums[x];
+							nums[x] = nums[y];
+							nums[y] = temp;
+						}
+					}
+					if(nums[x]>a&&index<=i) {
+						index=x;
+					}
+				}
+				int ii=nums[index];
+				nums[index]=a;
+				nums[i]=ii;
+				return;
+			}
+			max = a;
+			if (i == 0) {
+				for (int j = 0; j <= nums.length / 2 - 1; j++) {
+					int x = nums[j];
+					int y = nums[nums.length - 1 - j];
+					nums[j] = y;
+					nums[nums.length - 1 - j] = x;
+				}
+				return;
+			}
+
+		}
+    }
+}
+
+
+32.longest valid paretheses
+
+class Solution {
+    public int longestValidParentheses(String s) {
+       
+        int len = s.length();
+        int max = 0;
+        int left = 0;
+        int right = 0;
+        for (int i = 0; i < len; i++) {
+            if (s.charAt(i) == '(') {
+                left++;
+            } else {
+                right++;
+            }
+            if (left == right) {
+                max = Math.max(max, 2 * right);
+            } else if (left < right) {
+                left = 0;
+                right = 0;
+            }
+        }
+        left = 0;
+        right = 0;
+        for (int i = len - 1; i > -1; i--) {
+            if (s.charAt(i) == ')') {
+                right++;
+            } else {
+                left++;
+            }
+            if (left == right) {
+                max = Math.max(max, 2 * right);
+            } else if (left > right) {
+                left = 0;
+                right = 0;
+            }
+        }
+        return max;
+    }
+}
